@@ -12,5 +12,5 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="your_web_client_id">ENTER YOUR TOKEN </string>
+    <string name="your_web_client_id">ENTER_YOUR_WEB_CLIENT_ID</string>
 </resources>

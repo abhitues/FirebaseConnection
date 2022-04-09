@@ -39,8 +39,8 @@ class signInFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
         oneTapClient = Identity.getSignInClient(requireActivity())
         signInRequest = BeginSignInRequest.builder()
@@ -48,30 +48,32 @@ class signInFragment : Fragment() {
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     // Your server's client ID, not your Android client ID.
-                    .setServerClientId(getString(R.string.your_web_client_id))
+                     .setServerClientId(getString(R.string.your_web_client_id))
                     // Only show accounts previously used to sign in.
                     .setFilterByAuthorizedAccounts(false)
                     .build()
             )
             .setAutoSelectEnabled(true)
             .build()
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(requireActivity()) { result ->
-                try {
-                    startIntentSenderForResult(
-                        result.pendingIntent.intentSender, REQ_ONE_TAP,
-                        null, 0, 0, 0, null
-                    )
-                } catch (e: IntentSender.SendIntentException) {
-                    Snackbar.make(binding.root, e.message.toString(), Snackbar.LENGTH_INDEFINITE)
-                        .show()
+        binding.btnsignin.setOnClickListener {
+            oneTapClient.beginSignIn(signInRequest)
+                .addOnSuccessListener(requireActivity()) { result ->
+                    try {
+                        startIntentSenderForResult(
+                            result.pendingIntent.intentSender, REQ_ONE_TAP,
+                            null, 0, 0, 0, null
+                        )
+                    } catch (e: IntentSender.SendIntentException) {
+                        Snackbar.make(binding.root, e.message.toString(), Snackbar.LENGTH_INDEFINITE)
+                            .show()
+
+                    }
+                }
+                .addOnFailureListener(requireActivity()) { e ->
+                    Snackbar.make(binding.root, e.message.toString(), Snackbar.LENGTH_INDEFINITE).show()
 
                 }
-            }
-            .addOnFailureListener(requireActivity()) { e ->
-                Snackbar.make(binding.root, e.message.toString(), Snackbar.LENGTH_INDEFINITE).show()
-
-            }
+        }
     }
 
     override fun onStart() {
@@ -118,7 +120,7 @@ class signInFragment : Fragment() {
                         }
                 }
                 else -> {
-                    Snackbar.make(binding.root, "no tttoken found", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(binding.root, "token not found", Snackbar.LENGTH_INDEFINITE)
                         .show()
                 }
             }
